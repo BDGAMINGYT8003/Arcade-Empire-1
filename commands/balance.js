@@ -31,9 +31,9 @@ module.exports = {
         const balanceContainer = new ContainerBuilder()
             .setAccentColor(0x00FF00) // Green
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setHeadline(`${targetUser.username}'s Wallet`).setOmitTrailingSemicolon(true),
-                new TextDisplayBuilder().setMarkdown(`**<:ArcadeTokens:1420147365213507686> Arcade Tokens**\n\`${userProfile.balance.at.toLocaleString()}\``).setOmitTrailingSemicolon(true),
-                new TextDisplayBuilder().setMarkdown(`**<:GoldenJoysticks:1420147415868244148> Golden Joysticks**\n\`${userProfile.balance.gj.toLocaleString()}\``)
+                new TextDisplayBuilder().setMarkdown(`**${targetUser.username}'s Wallet**`),
+                new TextDisplayBuilder().setMarkdown(`**<:ArcadeTokens:1420147365213507686> Arcade Tokens**\n\`${userProfile.balance.at.toLocaleString()}\``),
+                new TextDisplayBuilder().setMarkdown(`**<:GoldenJoysticks:1420147415868244148> Golden Joysticks**\n\`${userProfile.balance.gj.toLocaleString()}\``),
             );
 
         await interaction.reply({

@@ -61,8 +61,8 @@ module.exports = {
             const gameStartContainer = new ContainerBuilder()
                 .setAccentColor(0x5865F2)
                 .addTextDisplayComponents(
-                    new TextDisplayBuilder().setHeadline('Rock, Paper, Scissors').setOmitTrailingSemicolon(true),
-                    new TextDisplayBuilder().setContent(`**The game is on!**\nBoth players, please make your move secretly. You have 20 seconds.`)
+                    new TextDisplayBuilder().setMarkdown('**Rock, Paper, Scissors**'),
+                    new TextDisplayBuilder().setContent(`The game is on!\nBoth players, please make your move secretly. You have 20 seconds.`)
                 );
             await challengeInteraction.update({ components: [gameStartContainer], flags: MessageFlags.IsComponentsV2 });
 
@@ -122,7 +122,7 @@ module.exports = {
             const finalContainer = new ContainerBuilder()
                 .setAccentColor(result === 0 ? 0x5865F2 : 0x00FF00)
                 .addTextDisplayComponents(
-                    new TextDisplayBuilder().setHeadline('Game Over!').setOmitTrailingSemicolon(true),
+                    new TextDisplayBuilder().setMarkdown('**Game Over!**'),
                     new TextDisplayBuilder().setContent(resultText)
                 );
             await interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
@@ -132,7 +132,7 @@ module.exports = {
             const timeoutContainer = new ContainerBuilder()
                 .setAccentColor(0xFF0000)
                 .addTextDisplayComponents(
-                    new TextDisplayBuilder().setHeadline('Game Forfeited').setOmitTrailingSemicolon(true),
+                    new TextDisplayBuilder().setMarkdown('**Game Forfeited**'),
                     new TextDisplayBuilder().setContent('A player did not make a move in time. The game has been cancelled and wagers returned.')
                 );
             await interaction.editReply({ components: [timeoutContainer], flags: MessageFlags.IsComponentsV2 });

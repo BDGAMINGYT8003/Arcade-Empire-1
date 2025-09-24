@@ -109,7 +109,7 @@ module.exports = {
             return new ContainerBuilder()
                 .setAccentColor(0x5865F2)
                 .addTextDisplayComponents(
-                    new TextDisplayBuilder().setHeadline(`Tic-Tac-Toe: ${initiator.username} vs. ${opponent.username}`).setOmitTrailingSemicolon(true),
+                    new TextDisplayBuilder().setMarkdown(`**Tic-Tac-Toe: ${initiator.username} vs. ${opponent.username}**`),
                     new TextDisplayBuilder().setContent(message)
                 );
         };

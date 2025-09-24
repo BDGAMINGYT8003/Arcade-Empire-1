@@ -22,7 +22,7 @@ module.exports = {
             const errorContainer = new ContainerBuilder()
                 .setAccentColor(0xFF0000) // Red
                 .addTextDisplayComponents(
-                    new TextDisplayBuilder().setHeadline('Interaction Locked').setOmitTrailingSemicolon(true),
+                    new TextDisplayBuilder().setMarkdown('**Interaction Locked**'),
                     new TextDisplayBuilder().setContent('You are already in an active command. Please complete or cancel it before starting a new one.')
                 );
 

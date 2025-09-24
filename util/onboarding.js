@@ -10,7 +10,7 @@ async function startOnboarding(interaction) {
         const welcomeContainer = new ContainerBuilder()
             .setAccentColor(0x5865F2) // Blurple
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setHeadline('Welcome to Arcade Empire!').setOmitTrailingSemicolon(true),
+                new TextDisplayBuilder().setMarkdown('**Welcome to Arcade Empire!**'),
                 new TextDisplayBuilder().setContent("Hey there! I'm here to guide you through the basics of the bot. Let's get you set up.")
             )
             .addActionRowComponents(
@@ -26,9 +26,8 @@ async function startOnboarding(interaction) {
         });
 
         const filter = i => i.user.id === user.id;
-        // Use the interaction's channel if it's available, otherwise fallback to a cached channel
         const channel = interaction.channel || client.channels.cache.get(interaction.channelId);
-        const collector = channel.createMessageComponentCollector({ filter, time: 60000 }); // 60s timeout
+        const collector = channel.createMessageComponentCollector({ filter, time: 60000 });
 
         collector.on('collect', async i => {
             if (i.customId === 'onboarding_next_1') {
@@ -36,9 +35,9 @@ async function startOnboarding(interaction) {
                 const currencyContainer = new ContainerBuilder()
                     .setAccentColor(0x5865F2)
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setHeadline('Our Currencies').setOmitTrailingSemicolon(true),
+                        new TextDisplayBuilder().setMarkdown('**Our Currencies**'),
                         new TextDisplayBuilder().setContent("Here in the Arcade, we use two types of currency:"),
-                        new TextDisplayBuilder().setMarkdown(`**<:ArcadeTokens:1420147365213507686> Arcade Tokens (AT)**\nThis is the main currency you use to challenge other players in our minigames.`).setOmitTrailingSemicolon(true),
+                        new TextDisplayBuilder().setMarkdown(`**<:ArcadeTokens:1420147365213507686> Arcade Tokens (AT)**\nThis is the main currency you use to challenge other players in our minigames.`),
                         new TextDisplayBuilder().setMarkdown(`**<:GoldenJoysticks:1420147415868244148> Golden Joysticks (GJ)**\nThis is a premium currency for special events and items. (More on this later!)`)
                     )
                     .addActionRowComponents(
@@ -55,7 +54,7 @@ async function startOnboarding(interaction) {
                  const finalContainer = new ContainerBuilder()
                     .setAccentColor(0x5865F2)
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setHeadline('Checking Balances & Challenging').setOmitTrailingSemicolon(true),
+                        new TextDisplayBuilder().setMarkdown('**Checking Balances & Challenging**'),
                         new TextDisplayBuilder().setContent("You can check your balance anytime with the `/balance` command.\n\nTo challenge someone, just use a game command like `/rps @user <wager>`.\n\nYou've been given a starting balance of **1,000 AT** to get you started!")
                     )
                     .addActionRowComponents(
@@ -68,13 +67,12 @@ async function startOnboarding(interaction) {
             }
 
             if (i.customId === 'onboarding_finish') {
-                // Mark user as onboarded in the database
                 updateUser(user.id, { onboarded: true });
 
                 const completionContainer = new ContainerBuilder()
                     .setAccentColor(0x00FF00) // Green
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setHeadline('Setup Complete!').setOmitTrailingSemicolon(true),
+                        new TextDisplayBuilder().setMarkdown('**Setup Complete!**'),
                         new TextDisplayBuilder().setContent("You are all set! You can now use all of Arcade Empire's commands. Have fun!")
                     );
 
@@ -86,16 +84,14 @@ async function startOnboarding(interaction) {
 
         collector.on('end', (collected, reason) => {
             client.activeUsers.delete(user.id);
-            if (reason === 'time') {
+            if (reason === 'time' && collected.size === 0) {
                 const timeoutContainer = new ContainerBuilder()
                     .setAccentColor(0xFF0000) // Red
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setHeadline('Tutorial Timed Out').setOmitTrailingSemicolon(true),
+                        new TextDisplayBuilder().setMarkdown('**Tutorial Timed Out**'),
                         new TextDisplayBuilder().setContent("Your session has expired. Please run a command again to restart the tutorial.")
                     );
-                // Can't update the interaction after it's been too long, but we can try to edit the original reply if needed.
-                // For ephemeral messages, it's often better to just let it be.
-                console.log(`Onboarding timed out for ${user.tag}.`);
+                interaction.editReply({ components: [timeoutContainer], flags: MessageFlags.IsComponentsV2 }).catch(() => {}); // Ignore errors if interaction is too old
             }
         });
 
